@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Koma : MonoBehaviour
+public class Koma
 {
     // Start is called before the first frame update
-    void Start()
+    
+    public int x, z, n;
+
+    public Koma(int x, int z, int n)
     {
-        
+        this.x = x;
+        this.z = z;
+        this.n = n;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
