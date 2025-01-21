@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
+    private Rigidbody _rb;
     // Start is called before the first frame update
     void Start()
     {
-        Transform.position = Vector3.Lerp<Transform.position, Transform.position.y + 0.5, 
+        _rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKey(KeyCode.A))
+        {
+            _rb.AddForce(0, 0, 5);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        _rb.AddForce(-Physics.gravity * _rb.mass, ForceMode.Force);
     }
 }
