@@ -39,6 +39,8 @@ public class Move : MonoBehaviour
     private Vector3 position_LowerRight;
     private Vector3 position_LowerLeft;
 
+    private bool _isAccerelation = false;
+
     private float _steering;
 
     private PlayerInputAction _gameInputs;
@@ -61,6 +63,8 @@ public class Move : MonoBehaviour
         _gameInputs.Player.Steering.performed += OnSteering;
         _gameInputs.Player.Steering.canceled += OnSteering;
 
+        _gameInputs.Player.Accelerator.performed += OnAcceleration;
+        _gameInputs.Player.Accelerator.canceled += OnAcceleration;
         _gameInputs.Enable();
     }
     
@@ -102,15 +106,7 @@ public class Move : MonoBehaviour
             float speedInTargetDirection = Vector3.Dot(_rb.linearVelocity, frontDirection);
             _speedText.text = $"Speed: {speedInTargetDirection:F2} m/s";
 
-            if (Input.GetKey(KeyCode.W))
-            {
-               
-                
-                //_rb.AddForce(0, 0, 5);
-                ApplyAccelerationForce(frontDirection);
-
-            }
-            if (Input.GetKey(KeyCode.D))
+            if (_isAccerelation)
             {
 
 
@@ -208,6 +204,10 @@ public class Move : MonoBehaviour
 
     }
 
+    private void OnAcceleration(InputAction.CallbackContext context)
+    {
+        _isAccerelation = context.ReadValue<float>() > 0;
+    }
     private void ApplySteeringForce()
     {
 
@@ -243,7 +243,6 @@ public class Move : MonoBehaviour
     {
         Vector2 steeringInput = context.ReadValue<Vector2>();
 
-        Debug.Log(steeringInput.x);
         _steering = steeringInput.x;
     }
 
