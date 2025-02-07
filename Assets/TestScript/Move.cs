@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Move : MonoBehaviour
 {
@@ -19,6 +21,11 @@ public class Move : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     //スピードメーター
     [SerializeField] private TMP_Text _speedText;
+
+    [SerializeField] private float _turnSpeed = 2f;
+
+    [SerializeField] private float _smoothFactor = 5f;
+    private float _currentTurn;
     private Rigidbody _rb;
 
     private Vector3 _lastPosition;
@@ -32,17 +39,29 @@ public class Move : MonoBehaviour
     private Vector3 position_LowerRight;
     private Vector3 position_LowerLeft;
 
+    private float _steering;
+
+    private PlayerInputAction _gameInputs;
+    private Vector2 _moveInputValue;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        Debug.Log(Physics.gravity.magnitude);
+        
         _lastPosition = transform.position;
 
         _gravityForce = Physics.gravity.magnitude * _rb.mass;
 
         _rb.angularVelocity *= 0.9f;
         _velocity = _rb.linearVelocity;
+
+        _gameInputs = new PlayerInputAction();
+
+        _gameInputs.Player.Steering.started += OnSteering;
+        _gameInputs.Player.Steering.performed += OnSteering;
+        _gameInputs.Player.Steering.canceled += OnSteering;
+
+        _gameInputs.Enable();
     }
     
 
@@ -83,7 +102,7 @@ public class Move : MonoBehaviour
             float speedInTargetDirection = Vector3.Dot(_rb.linearVelocity, frontDirection);
             _speedText.text = $"Speed: {speedInTargetDirection:F2} m/s";
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.W))
             {
                
                 
@@ -91,6 +110,24 @@ public class Move : MonoBehaviour
                 ApplyAccelerationForce(frontDirection);
 
             }
+            if (Input.GetKey(KeyCode.D))
+            {
+
+
+                //_rb.AddForce(0, 0, 5);
+                ApplyAccelerationForce(frontDirection);
+
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+
+
+                //_rb.AddForce(0, 0, 5);
+                ApplyAccelerationForce(frontDirection);
+
+            }
+
+            ApplySteeringForce();
         }
     }
     private void ApplyLiftForce(Vector3 position)
@@ -170,6 +207,46 @@ public class Move : MonoBehaviour
         _lastPosition = transform.position;
 
     }
+
+    private void ApplySteeringForce()
+    {
+
+
+        //if (_rb)
+        //{
+            
+        //    transform.Rotate(Vector3.up * _steering * _turnSpeed );
+        //}
+
+
+        //if (_rb)
+        //{
+        //    Debug.Log("a");
+        //    _rb.AddForce(10, 0, 0);
+        //}
+
+        float targetTurn = _steering * _turnSpeed;
+
+        // 徐々にターン速度を目標値に近づける
+        _currentTurn = Mathf.Lerp(_currentTurn, targetTurn, Time.deltaTime * _smoothFactor);
+
+        // Y軸回転
+        transform.Rotate(Vector3.up * _currentTurn * Time.deltaTime);
+
+
+
+
+
+
+    }
+    private void OnSteering(InputAction.CallbackContext context)
+    {
+        Vector2 steeringInput = context.ReadValue<Vector2>();
+
+        Debug.Log(steeringInput.x);
+        _steering = steeringInput.x;
+    }
+
     void ApplyDamping()
     {
         Vector3 velocity = (transform.position - _lastPosition) / Time.fixedDeltaTime;
@@ -182,4 +259,6 @@ public class Move : MonoBehaviour
         _lastPosition = transform.position;
 
     }
+
+    
 }
