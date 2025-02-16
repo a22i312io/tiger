@@ -114,14 +114,14 @@ public class Move : MonoBehaviour
                 ApplyAccelerationForce(frontDirection);
 
             }
-            if (Input.GetKey(KeyCode.A))
-            {
+            //if (Input.GetKey(KeyCode.A))
+            //{
 
 
-                //_rb.AddForce(0, 0, 5);
-                ApplyAccelerationForce(frontDirection);
+            //    //_rb.AddForce(0, 0, 5);
+            //    ApplyAccelerationForce(frontDirection);
 
-            }
+            //}
 
             ApplySteeringForce();
         }

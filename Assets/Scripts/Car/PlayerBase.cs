@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerSystem
+namespace Car
 {
     public abstract class PlayerBase
     {
@@ -11,6 +11,14 @@ namespace PlayerSystem
         protected byte _id = byte.MaxValue;
         //プレイヤーのゲームオブジェクト
         protected GameObject _obj = null;
+        //プレイヤー操作クラス
+        //protected Controller _playerController = null;
+        //前フレームの位置
+        protected Vector3 _lastPosition = Vector3.zero;
+        //前フレームの回転
+        protected Quaternion _lastDirection = Quaternion.identity;
+        //アナログレバーの入力値
+        protected Vector3 _inputValue = Vector3.zero;
         //重量
         protected float _weight = 0;
         //速度
@@ -38,8 +46,15 @@ namespace PlayerSystem
 
             _obj.transform.parent = parent.transform;
 
-            
+            //_playerController = _obj.GetComponent<Controller>();
         }
+
+        public void SetActive(bool flag) { if (_obj) { _obj.SetActive(flag); } }
+
+        public virtual int ReadByte(byte[] getByte, int offset) { return 0; }
+
+       
+
     }
 
 }

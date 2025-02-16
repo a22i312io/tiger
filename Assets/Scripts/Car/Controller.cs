@@ -7,6 +7,7 @@ namespace PlayerSystem
 {
     public class Controller : MonoBehaviour
     {
+        
         private GameObject model = null;
 
         private List<GameObject> gameObjects = new List<GameObject>();
@@ -29,7 +30,10 @@ namespace PlayerSystem
         // Update is called once per frame
         void Update()
         {
-
+            foreach(GameObject obj in gameObjects)
+            {
+                //obj.SetActive(obj.name.Contains(_kind.ToString()));
+            }
         }
 
 
