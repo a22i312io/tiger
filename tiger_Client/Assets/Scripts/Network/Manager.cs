@@ -26,9 +26,9 @@ namespace Network
 
         private List<PlayerBase> _players = new List<PlayerBase>();
 
-        private PlayerInput _playerInput;
+        private Input _playerInput;
         private Player _offlinePlayer;
-        private CinemachineVirtualCamera _cinemachineVirtualCamera1;
+        //private CinemachineVirtualCamera _cinemachineVirtualCamera1;
         private GameObject _cameraTarget;
 
         // UDP通信のためのクラス
@@ -80,9 +80,9 @@ namespace Network
                 _selectNetworkInterfaceDropdown.RefreshShownValue();
             }
 
-            _playerInput = GetComponent<PlayerInput>();
+            _playerInput = GetComponent<Input>();
             _offlinePlayer = new Player(_playerPrefab, this.transform);
-            _cinemachineVirtualCamera1 = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
+            //_cinemachineVirtualCamera1 = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
             _cameraTarget = GameObject.Find("CameraTarget");
 
             // UDP送受信のためのクラスを作成する
@@ -155,7 +155,7 @@ namespace Network
             // Playerの更新
             player.Update(_playerInput);
 
-            
+
             // タイマー、入力、フォースをパケットに詰む
             _paket.Push(_globalTimer, player.InputMask, player.Force);
 
@@ -174,24 +174,24 @@ namespace Network
             }
 
             {
-                // カメラの注視点にプレイヤー位置をコピー
-                _cameraTarget.transform.position = player.Obj.transform.position;
+                //// カメラの注視点にプレイヤー位置をコピー
+                //_cameraTarget.transform.position = player.Obj.transform.position;
 
-                // プレイヤー切り替えやリセットが発生していたら
-                if (player.IsChangeCharacter | player.IsReset)
-                {
-                    Quaternion q = player.Obj.transform.rotation;
-                    Vector3 startPos = player.Obj.transform.position + q * new Vector3(0, 3, -5);
-                    // カメラを即時プレイヤー後方に切り替え
-                    _cinemachineVirtualCamera1.ForceCameraPosition(startPos, q);
-                    // 補間を無効にする
-                    _cinemachineVirtualCamera1.PreviousStateIsValid = false;
-                }
-                else
-                {
-                    // 補間を有効にする
-                    _cinemachineVirtualCamera1.PreviousStateIsValid = true;
-                }
+                //// プレイヤー切り替えやリセットが発生していたら
+                //if (/*player.IsChangeCharacter | */player.IsReset)
+                //{
+                //    Quaternion q = player.Obj.transform.rotation;
+                //    //Vector3 startPos = player.Obj.transform.position + q * new Vector3(0, 3, -5);
+                //    // カメラを即時プレイヤー後方に切り替え
+                //   // 補間を無効にする
+                //    // _cinemachineVirtualCamera1.ForceCameraPosition(startPos, q);
+                //    //_cinemachineVirtualCamera1.PreviousStateIsValid = false;
+                //}
+                //else
+                //{
+                //    // 補間を有効にする
+                //    //_cinemachineVirtualCamera1.PreviousStateIsValid = true;
+                //}
             }
 
             _globalTimer++;

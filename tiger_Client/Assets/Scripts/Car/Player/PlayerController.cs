@@ -1,4 +1,5 @@
 using Car;
+using Car.Move;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
@@ -68,6 +69,18 @@ public class PlayerController : MonoBehaviour
         GetComponent<SphereCollider>().enabled = false;
         // Rigidbodyを無効化（位置を姿勢指定のみで動かす）
         GetComponent<Rigidbody>().isKinematic = true;
+
+        GetComponent<Core>().enabled = false;
+
+        GetComponent<Move>().enabled = false;
+
+        GetComponent<Input>().enabled = false;
+
+        GetComponent<Accelerator>().enabled = false;
+
+        GetComponent<Hover>().enabled = false;
+
+        GetComponent<Steering>().enabled = false;
     }
 
     // WakeUp（ローカルで衝突判定やシミュレーションを行う状態）
@@ -108,10 +121,10 @@ public class PlayerController : MonoBehaviour
     //}
 
     // 衝突中に呼び出されるコールバック
-    void OnCollisionStay(Collision collision) { _isGround = true; }
+    //void OnCollisionStay(Collision collision) { _isGround = true; }
 
     // 衝突終了時に呼び出されるコールバック
-    void OnCollisionExit(Collision collision) { _isGround = false; }
+    //void OnCollisionExit(Collision collision) { _isGround = false; }
 
 
     // プレイヤーを動かすためにRigidbodyに加える力を計算する

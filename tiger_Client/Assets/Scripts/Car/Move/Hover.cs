@@ -16,13 +16,13 @@ namespace Car.Move {
 
         private Core _core;
 
-        Vector3 _currentPosition;
+        //Vector3 _currentPosition;
         // 現在姿勢
-        Quaternion _currentRotation;
-        private Vector3 position_UpperRight;
-        private Vector3 position_UpperLeft;
-        private Vector3 position_LowerRight;
-        private Vector3 position_LowerLeft;
+        //Quaternion _currentRotation;
+        //private Vector3 position_UpperRight;
+        //private Vector3 position_UpperLeft;
+        //private Vector3 position_LowerRight;
+        //private Vector3 position_LowerLeft;
         public bool IsHover { get { return _isHover; } set { _isHover = value; } }
 
         void Start()
@@ -44,8 +44,8 @@ namespace Car.Move {
                 {
                     _wheelPositions.Clear(); // 位置をリセット
 
-                    _currentPosition = gameObject.transform.position;
-                    _currentRotation = gameObject.transform.rotation;
+                    //_currentPosition = gameObject.transform.position;
+                    //_currentRotation = gameObject.transform.rotation;
 
                     // 各ホイールの位置を計算
                     foreach (var offset in _offsets)

@@ -2,59 +2,198 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using UnityEditor.Sprites;
+using UnityEditor.Presets;
+using UnityEngine.Windows;
+using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
+using UnityEditor.PackageManager;
 
-namespace Car
+public class Player
 {
-    public abstract class PlayerBase
+    // ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆã¾ã§ã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
+    private const int c_timeout = 600;
+    private int _timeout = c_timeout;
+    // å—ä¿¡æ¸ˆã¿ãƒ•ãƒ¬ãƒ¼ãƒ 
+    private byte _receiveTimer = 0;
+    // å‡¦ç†æ¸ˆã¿ãƒ•ãƒ¬ãƒ¼ãƒ 
+    private byte _execTimer = 0;
+    private readonly object _lockObject = new object();
+    private List<PacketData> _packets = new List<PacketData>();
+    private IPEndPoint _endPoint;
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼GameObject
+    private GameObject _obj = null;
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ“ä½œã‚¯ãƒ©ã‚¹
+    private PlayerController _playerController = null;
+    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ä½ç½®
+    protected Vector3 _lastPos = Vector3.zero;
+    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å§¿å‹¢
+    protected Quaternion _lastDir = Quaternion.identity;
+    // ãƒœã‚¿ãƒ³å…¥åŠ›ã‚’ãƒã‚¹ã‚¯ã«ã—ãŸã‚‚ã®
+    private PacketData.eInputMask _inputMask = 0;
+    // çŠ¶æ…‹ã‚’è¡¨ã™ãƒã‚¹ã‚¯
+    protected PacketData.eStateMask _stateMask = 0;
+
+    public IPEndPoint EndPoint { get { return _endPoint; } }
+    public GameObject Obj { get { return _obj; } set { _obj = value; } }
+    public bool IsAccelerator { get { return (_inputMask & PacketData.eInputMask.Accelerator) != 0; } }
+    public bool IsFire { get { return (_inputMask & PacketData.eInputMask.Fire) != 0; } }
+    public bool IsJump { get { return (_inputMask & PacketData.eInputMask.Jump) != 0; } }
+    public bool IsChangeCharacter { get { return (_inputMask & PacketData.eInputMask.ChangeCharacter) != 0; } }
+    public bool IsGround { get { return _obj.GetComponent<PlayerController>().IsGround; } }
+    public bool IsReset { get { return (_stateMask & PacketData.eStateMask.Reset) != 0; } }
+
+    public PacketData.eStateMask SendState
     {
-        //ƒvƒŒƒCƒ„[ID
-        protected byte _id = byte.MaxValue;
-        //ƒvƒŒƒCƒ„[‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg
-        protected GameObject _obj = null;
-        //ƒvƒŒƒCƒ„[‘€ìƒNƒ‰ƒX
-        //protected Controller _playerController = null;
-        //‘OƒtƒŒ[ƒ€‚ÌˆÊ’u
-        protected Vector3 _lastPosition = Vector3.zero;
-        //‘OƒtƒŒ[ƒ€‚Ì‰ñ“]
-        protected Quaternion _lastDirection = Quaternion.identity;
-        //ƒAƒiƒƒOƒŒƒo[‚Ì“ü—Í’l
-        protected Vector3 _inputValue = Vector3.zero;
-        //d—Ê
-        protected float _weight = 0;
-        //‘¬“x
-        protected float _speed = 0;
-        //Å‚‘¬“x
-        protected float _maxspeed = 0;
-        //‰Á‘¬—Í
-        protected float _acceleration = 0;
-        //ƒnƒ“ƒhƒŠƒ“ƒO
-        protected float _handling = 0;
-        //ƒXƒ^ƒ~ƒi
-        protected float _stamina = 0;
-        
-        public byte Id {  get { return _id; } set { _id = value; } }
-        public GameObject Obj { get { return _obj; } set { _obj = value; } }
-        public float Weight { get { return _weight; } set { _weight = value; } }
-        public float Speed { get { return _speed; } set { _speed = value; } }
-        public float Acceleration { get { return _acceleration; } set { _acceleration = value; } }
-        public float Handling { get { return _handling; } set {_handling = value; } }
-        public float Stamina { get { return _stamina; } set { _stamina = value; } }
-
-        public PlayerBase(GameObject prefab, Transform parent)
+        get
         {
-            _obj = GameObject.Instantiate(prefab);
-
-            _obj.transform.parent = parent.transform;
-
-            //_playerController = _obj.GetComponent<Controller>();
+            PacketData.eStateMask stateMask = 0;
+            if (IsGround) { stateMask |= PacketData.eStateMask.Ground; }
+            if (IsReset) { stateMask |= PacketData.eStateMask.Reset; }
+            return stateMask;
         }
-
-        public void SetActive(bool flag) { if (_obj) { _obj.SetActive(flag); } }
-
-        public virtual int ReadByte(byte[] getByte, int offset) { return 0; }
-
-       
-
     }
 
+    public Player(IPEndPoint iPEndPoint) { _endPoint = iPEndPoint; }
+
+    public void OnDestroy() { GameObject.Destroy(_obj); }
+
+    public void Update(GameObject prefab, Transform parent)
+    {
+        Vector3 force = new Vector3();
+        PacketData.eInputMask inputMask = 0;
+
+        lock (_lockObject)
+        {
+            byte timer;
+            for (timer = _execTimer; timer != _receiveTimer; timer++)
+            {
+                PacketData p = _packets.Find(packet => timer == packet.Timer);
+                if (p != null)
+                {
+                    _execTimer = timer;
+                    force += p.Force;
+                    inputMask |= p.InputMask;
+                    _packets.Remove(p);
+                }
+            }
+            for (byte i = 0; i < 3; i++)
+            {
+                PacketData p = _packets.Find(packet => (timer + i) == packet.Timer);
+                if (p != null)
+                {
+                    _execTimer = (byte)(timer + i);
+                    force += p.Force;
+                    inputMask |= p.InputMask;
+                    _packets.Remove(p);
+                }
+            }
+        }
+
+        _inputMask = inputMask;
+        _stateMask = 0;
+
+        if (_obj == null)
+        {
+            _obj = GameObject.Instantiate(prefab);
+            _obj.transform.parent = parent;
+            _playerController = _obj.GetComponent<PlayerController>();
+            _stateMask |= PacketData.eStateMask.Reset;
+        }
+
+        Vector3 d = _obj.transform.position - _lastPos;
+
+        d.y = 0.0f;
+
+        if (d != Vector3.zero)
+        {
+            _obj.transform.rotation = Quaternion.Slerp(_lastDir, Quaternion.LookRotation(d), Mathf.Clamp(0.0f, 1.0f, d.magnitude));
+        }
+
+        bool isReset = false;
+
+        if (IsChangeCharacter)
+        {
+            _playerController.Kind = _playerController.Kind == eKind.police ? eKind.zombie : eKind.police;
+            _obj.layer = LayerMask.NameToLayer("Player1") + (int)_playerController.Kind;
+            isReset = true;
+        }
+
+        if (_obj.transform.position.y < -8.0f)
+        {
+            isReset = true;
+        }
+
+        if (isReset)
+        {
+            _playerController.Restart();
+            _stateMask |= PacketData.eStateMask.Reset;
+        }
+
+        _lastPos = _obj.transform.position;
+        _lastDir = _obj.transform.rotation;
+
+        if (IsGround && IsJump)
+        {
+            force.y += 24.0f * 8.0f;
+        }
+        _obj.GetComponent<Rigidbody>().AddForce(force);
+    }
+
+    public void ResetTimeout() { _timeout = c_timeout; }
+
+    public bool DecTimeout() { return _timeout <= 0 ? true : (--_timeout <= 0); }
+
+    public void Push(PacketData data)
+    {
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ‚Ìƒpï¿½Pï¿½bï¿½gï¿½Í–ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (data.Timer == _execTimer || data.Timer == _execTimer - 1 || data.Timer == _execTimer - 2)
+        {
+            return;
+        }
+
+        lock (_lockObject)
+        {
+            int indx = _packets.FindIndex(i => data.Timer == i.Timer);
+
+            if (indx < 0)
+            {
+                _packets.Add(data);
+                _receiveTimer = data.Timer;
+            }
+        }
+    }
+
+    public byte[] GetBytes(byte key)
+    {
+
+        Vector3 v = Vector3.zero;
+        Quaternion q = Quaternion.identity;
+        float speed = 0.0f;
+
+        if (_obj != null)
+        {
+            v = _obj.transform.position;
+            q = _obj.transform.rotation;
+            speed = Mathf.Abs(Vector3.Dot(new Vector3(1.0f, 0.0f, 1.0f), _obj.GetComponent<Rigidbody>().linearVelocity));
+        }
+
+        List<byte> list = new List<byte>();
+
+        list.AddRange(BitConverter.GetBytes(v.x));
+        list.AddRange(BitConverter.GetBytes(v.y));
+        list.AddRange(BitConverter.GetBytes(v.z));
+        list.AddRange(BitConverter.GetBytes(speed));
+        list.AddRange(BitConverter.GetBytes(q.x));
+        list.AddRange(BitConverter.GetBytes(q.y));
+        list.AddRange(BitConverter.GetBytes(q.z));
+        list.AddRange(BitConverter.GetBytes(q.w));
+        list.Add(key);
+        list.Add((byte)_playerController.Kind);
+        list.Add((byte)SendState);
+
+        return list.ToArray();
+    }
 }

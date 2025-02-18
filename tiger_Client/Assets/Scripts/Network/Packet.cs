@@ -31,8 +31,7 @@ namespace Network
         [Flags]
         public enum eStateMask : byte
         {
-            Ground = 1 << 3,
-            Reset = 1 << 4,
+            Ground = 1 << 2,
         }
 
         private byte _timer = 0;

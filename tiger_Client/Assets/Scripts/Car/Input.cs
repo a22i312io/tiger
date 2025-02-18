@@ -43,4 +43,9 @@ public class Input : MonoBehaviour
 
         _steering = _steeringInputValue.x;
     }
+
+    private void OnDestroy()
+    {
+        _input?.Dispose();
+    }
 }

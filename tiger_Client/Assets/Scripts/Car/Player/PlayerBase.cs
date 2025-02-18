@@ -13,11 +13,13 @@ namespace Car
         //プレイヤーのゲームオブジェクト
         protected GameObject _obj = null;
         //プレイヤー操作クラス
-        //protected Controller _playerController = null;
+        protected PlayerController _playerController = null;
         //前フレームの位置
         protected Vector3 _lastPosition = Vector3.zero;
         //前フレームの回転
         protected Quaternion _lastDirection = Quaternion.identity;
+        // 移動速度
+        protected Vector3 _force = Vector3.zero;
         //アナログレバーの入力値
         protected Vector3 _inputValue = Vector3.zero;
         // ボタン入力をマスクにしたもの
@@ -26,38 +28,39 @@ namespace Car
         protected PacketData.eStateMask _stateMask = 0;
         // eStateMaskが参照されたらtrueになるマスク
         protected bool _isStateUsed = true;
-        public byte Id {  get { return _id; } set { _id = value; } }
+        public byte Id { get { return _id; } set { _id = value; } }
         public GameObject Obj { get { return _obj; } set { _obj = value; } }
+        public Vector3 Force { get { return _playerController.Force; } }
         public Vector3 InputValue { get { return _inputValue; } }
         public PacketData.eInputMask InputMask { get { return _inputMask; } }
         public bool IsGround { get { _isStateUsed = true; return (_stateMask & PacketData.eStateMask.Ground) != 0; } }
-        public bool IsReset { get { _isStateUsed = true; return (_stateMask & PacketData.eStateMask.Reset) != 0; } }
 
         public PlayerBase(GameObject prefab, Transform parent)
         {
             _obj = GameObject.Instantiate(prefab);
 
-            //_obj.transform.parent = parent.transform;
+            _obj.transform.parent = parent.transform;
 
-            //_playerController = _obj.GetComponent<Controller>();
+            _playerController = _obj.GetComponent<PlayerController>();
         }
 
         public void SetActive(bool flag) { if (_obj) { _obj.SetActive(flag); } }
 
         public virtual int ReadByte(byte[] getByte, int offset) { return 0; }
 
-       public virtual void Update(PlayerInputAction input) { }
+        public virtual void Update(Input input) { }
 
     }
 
 
     public class Player : PlayerBase
     {
-        public Player(GameObject prefab, Transform parent) : base(prefab, parent) 
+        
+        public Player(GameObject prefab, Transform parent) : base(prefab, parent)
         {
         }
 
-        public override void Update(PlayerInputAction input)
+        public override void Update(Input input)
         {
             base.Update(input);
         }
@@ -67,7 +70,7 @@ namespace Car
     {
         public NetPlayer(GameObject prefab, Transform parent) : base(prefab, parent)
         {
-            //_PlayerController.Sleep();
+            _playerController.Sleep();
         }
 
         // 受信したbyte配列からデータを復元する
@@ -80,7 +83,7 @@ namespace Car
             _obj.transform.position = new Vector3(px, py, pz);
 
             // 移動速度
-            _Controller.Speed = System.BitConverter.ToSingle(getByte, offset); offset += sizeof(float);
+            _playerController.Speed = System.BitConverter.ToSingle(getByte, offset); offset += sizeof(float);
 
             // 姿勢
             float rx = System.BitConverter.ToSingle(getByte, offset); offset += sizeof(float);
@@ -93,7 +96,7 @@ namespace Car
             _id = getByte[offset]; offset += sizeof(byte);
 
             //  表示モデルの種類
-            _playerController.Kind = (eKind)getByte[offset]; offset += sizeof(byte);
+            //_playerController.Kind = (eKind)getByte[offset]; offset += sizeof(byte);
 
             // 入力マスクをクリア
             //_inputMask = 0;
@@ -103,8 +106,8 @@ namespace Car
             else { _stateMask |= (PacketData.eStateMask)getByte[offset]; offset += sizeof(byte); }
 
             // 位置と姿勢を保存
-            _lastPos = _obj.transform.position;
-            _lastDir = _obj.transform.rotation;
+            _lastPosition = _obj.transform.position;
+            _lastDirection = _obj.transform.rotation;
 
             return offset;
         }
