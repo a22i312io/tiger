@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Car
+namespace Car.Player
 {
     public abstract class PlayerBase
     {
@@ -21,19 +21,15 @@ namespace Car
         // 移動速度
         protected Vector3 _force = Vector3.zero;
         //アナログレバーの入力値
-        protected Vector3 _inputValue = Vector3.zero;
+        protected Vector3 _inputSteering = Vector3.zero;
         // ボタン入力をマスクにしたもの
         protected PacketData.eInputMask _inputMask = 0;
-        // 状態を表すマスク
-        protected PacketData.eStateMask _stateMask = 0;
-        // eStateMaskが参照されたらtrueになるマスク
-        protected bool _isStateUsed = true;
         public byte Id { get { return _id; } set { _id = value; } }
         public GameObject Obj { get { return _obj; } set { _obj = value; } }
-        public Vector3 Force { get { return _playerController.Force; } }
-        public Vector3 InputValue { get { return _inputValue; } }
+        public Vector3 Force { get { return _force; } }
+        public Vector3 InputValue { get { return _inputSteering; } }
         public PacketData.eInputMask InputMask { get { return _inputMask; } }
-        public bool IsGround { get { _isStateUsed = true; return (_stateMask & PacketData.eStateMask.Ground) != 0; } }
+        public bool IsAccelerator { get { return (_inputMask & PacketData.eInputMask.Accelerator) != 0; } }
 
         public PlayerBase(GameObject prefab, Transform parent)
         {
@@ -48,7 +44,15 @@ namespace Car
 
         public virtual int ReadByte(byte[] getByte, int offset) { return 0; }
 
-        public virtual void Update(Input input) { }
+        public virtual void Update(Input input) 
+        {
+            _force = input.SteeringValue;
+            //_inputSteering = input.Steering;
+
+            _inputMask = 0;
+            if (input.IsAccerelation) { _inputMask |= PacketData.eInputMask.Accelerator; }
+
+        }
 
     }
 
@@ -63,6 +67,7 @@ namespace Car
         public override void Update(Input input)
         {
             base.Update(input);
+            
         }
     }
 
@@ -95,15 +100,9 @@ namespace Car
             // ID
             _id = getByte[offset]; offset += sizeof(byte);
 
-            //  表示モデルの種類
-            //_playerController.Kind = (eKind)getByte[offset]; offset += sizeof(byte);
-
             // 入力マスクをクリア
             //_inputMask = 0;
 
-            // 状態マスクは参照済（すでに使われていたら）上書き、未参照（まだつかわれていなければ）ORを取ることで前の状態も残す
-            if (_isStateUsed) { _stateMask = (PacketData.eStateMask)getByte[offset]; offset += sizeof(byte); }
-            else { _stateMask |= (PacketData.eStateMask)getByte[offset]; offset += sizeof(byte); }
 
             // 位置と姿勢を保存
             _lastPosition = _obj.transform.position;

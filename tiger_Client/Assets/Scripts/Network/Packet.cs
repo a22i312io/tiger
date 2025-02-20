@@ -24,14 +24,6 @@ namespace Network
         public enum eInputMask : byte
         {
             Accelerator = 1 << 0,
-            Steering = 1 << 1,
-    
-        }
-
-        [Flags]
-        public enum eStateMask : byte
-        {
-            Ground = 1 << 2,
         }
 
         private byte _timer = 0;

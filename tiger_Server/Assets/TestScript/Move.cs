@@ -43,7 +43,7 @@ public class Move : MonoBehaviour
 
     private float _steering;
 
-    private PlayerInputAction _gameInputs;
+    //private PlayerInputAction _gameInputs;
     private Vector2 _moveInputValue;
 
     void Start()
@@ -57,15 +57,15 @@ public class Move : MonoBehaviour
         _rb.angularVelocity *= 0.9f;
         _velocity = _rb.linearVelocity;
 
-        _gameInputs = new PlayerInputAction();
+        //_gameInputs = new PlayerInputAction();
 
-        _gameInputs.Player.Steering.started += OnSteering;
-        _gameInputs.Player.Steering.performed += OnSteering;
-        _gameInputs.Player.Steering.canceled += OnSteering;
+        //_gameInputs.Player.Steering.started += OnSteering;
+        //_gameInputs.Player.Steering.performed += OnSteering;
+        //_gameInputs.Player.Steering.canceled += OnSteering;
 
-        _gameInputs.Player.Accelerator.performed += OnAcceleration;
-        _gameInputs.Player.Accelerator.canceled += OnAcceleration;
-        _gameInputs.Enable();
+        //_gameInputs.Player.Accelerator.performed += OnAcceleration;
+        //_gameInputs.Player.Accelerator.canceled += OnAcceleration;
+        //_gameInputs.Enable();
     }
     
 

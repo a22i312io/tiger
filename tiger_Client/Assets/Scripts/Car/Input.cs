@@ -8,12 +8,13 @@ public class Input : MonoBehaviour
     // インプットアクション
     private PlayerInputAction _input;
     // ステアリング入力値
-    private Vector2 _steeringInputValue;
+    private Vector2 _steeringValue;
     // 加速判定
     private bool _isAccerelation = false;
     // ステアリングのX値
     private float _steering;
 
+    public Vector3 SteeringValue { get { return _steeringValue; } }
     public bool IsAccerelation { get { return _isAccerelation; } }
     public float Steering { get { return _steering; } }
 
@@ -34,15 +35,15 @@ public class Input : MonoBehaviour
     private void OnAcceleration(InputAction.CallbackContext context)
     {
         _isAccerelation = context.ReadValue<float>() > 0;
-        
+       
     }
 
     private void OnSteering(InputAction.CallbackContext context)
     {
-        _steeringInputValue = context.ReadValue<Vector2>();
+        _steeringValue = context.ReadValue<Vector2>();
 
-        _steering = _steeringInputValue.x;
     }
+
 
     private void OnDestroy()
     {

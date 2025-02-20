@@ -11,7 +11,7 @@ public class Steering : MonoBehaviour
 
     [SerializeField] private float _smoothFactor = 5f;
    
-    private float _turnSpeed = 50f;
+    private float _turnSpeed = 5f;
 
     public float Steeringvalue { get { return _steeringvalue; } set { _steeringvalue = value; } } 
     void Start()

@@ -22,13 +22,7 @@ public class PacketData
     public enum eInputMask : byte
     {
         Accelerator = 1 << 0,
-        Steering = 1 << 1,
-    }
-
-    [Flags]
-    public enum eStateMask : byte
-    {
-        Ground = 1 << 2,
+        
     }
 
     private byte _timer = 0;
@@ -82,7 +76,7 @@ public class PacketData
         _force.x = x;
         _force.y = y;
         _force.z = z;
-
+        
         return startIndex;
     }
 }

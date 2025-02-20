@@ -1,4 +1,4 @@
-using Car;
+using Car.Player;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -115,11 +115,11 @@ namespace Network
                     int playerNum = _udpReceiver.Buffer[0];
 
                     int offset = 1;
-
+                    
                     // プレイヤーが足りない場合は補充する
                     for (int i = _players.Count; i < playerNum; i++)
                         _players.Add(new NetPlayer(_playerPrefab, this.transform));
-
+                    //Debug.Log($"Received playerNum: {playerNum}, _players.Count: {_players.Count}");
                     // プレイヤー情報を読み込む
                     for (int i = 0; i < playerNum; i++)
                         offset = _players[i].ReadByte(_udpReceiver.Buffer, offset);
@@ -174,8 +174,8 @@ namespace Network
             }
 
             {
-                //// カメラの注視点にプレイヤー位置をコピー
-                //_cameraTarget.transform.position = player.Obj.transform.position;
+                // カメラの注視点にプレイヤー位置をコピー
+                _cameraTarget.transform.position = player.Obj.transform.position;
 
                 //// プレイヤー切り替えやリセットが発生していたら
                 //if (/*player.IsChangeCharacter | */player.IsReset)
