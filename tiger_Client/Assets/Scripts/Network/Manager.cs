@@ -176,22 +176,6 @@ namespace Network
             {
                 // カメラの注視点にプレイヤー位置をコピー
                 _cameraTarget.transform.position = player.Obj.transform.position;
-
-                //// プレイヤー切り替えやリセットが発生していたら
-                //if (/*player.IsChangeCharacter | */player.IsReset)
-                //{
-                //    Quaternion q = player.Obj.transform.rotation;
-                //    //Vector3 startPos = player.Obj.transform.position + q * new Vector3(0, 3, -5);
-                //    // カメラを即時プレイヤー後方に切り替え
-                //   // 補間を無効にする
-                //    // _cinemachineVirtualCamera1.ForceCameraPosition(startPos, q);
-                //    //_cinemachineVirtualCamera1.PreviousStateIsValid = false;
-                //}
-                //else
-                //{
-                //    // 補間を有効にする
-                //    //_cinemachineVirtualCamera1.PreviousStateIsValid = true;
-                //}
             }
 
             _globalTimer++;
