@@ -7,13 +7,13 @@ public class Steering : MonoBehaviour
 
     private float _currentTurn;
 
-    private float _steeringvalue;
+    private Vector3 _steeringvalue;
 
     [SerializeField] private float _smoothFactor = 5f;
    
     private float _turnSpeed = 50f;
 
-    public float Steeringvalue { get { return _steeringvalue; } set { _steeringvalue = value; } } 
+    public Vector3 Steeringvalue { get { return _steeringvalue; } set { _steeringvalue = value; } } 
     void Start()
     {
         _core = GetComponent<Core>();
@@ -24,12 +24,13 @@ public class Steering : MonoBehaviour
     {
         if (_core == null) return;
         //Debug.Log(_frontDirection);
+        
         ApplySteeringForce();
     }
 
     private void ApplySteeringForce()
     {
-        float targetTurn = _steeringvalue * _turnSpeed;
+        float targetTurn = _steeringvalue.x * _turnSpeed;
 
         // 徐々にターン速度を目標値に近づける
         _currentTurn = Mathf.Lerp(_currentTurn, targetTurn, Time.deltaTime * _smoothFactor);

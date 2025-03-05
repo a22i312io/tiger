@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Move : MonoBehaviour
 {
@@ -72,8 +73,8 @@ public class Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
+
+        Gravity();
     }
 
     private void FixedUpdate()
@@ -259,5 +260,20 @@ public class Move : MonoBehaviour
 
     }
 
+    private void Gravity()
+    {
+        Ray ray = new Ray(transform.position, -gameObject.transform.up);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10, _groundLayer))
+        {
+            Vector3 groundNormal = hit.normal;
+            Vector3 gravityDirection = -groundNormal;
+            _rb.AddForce(gravityDirection * _gravityForce, ForceMode.Acceleration);
+        }
+        else
+        {
+
+        }
+    }
     
 }

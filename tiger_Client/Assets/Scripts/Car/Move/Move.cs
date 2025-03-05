@@ -22,7 +22,8 @@ namespace Car.Move
             {
                 _accelerator.IsAccelerator = _input.IsAccerelation;
 
-                _steering.Steeringvalue = _input.Steering;
+                _steering.Steeringvalue = _input.SteeringValue;
+
             }
 
 

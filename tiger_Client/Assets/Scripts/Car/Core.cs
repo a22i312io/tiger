@@ -1,5 +1,6 @@
 using Car.Data;
 using UnityEngine;
+using UnityEngine.UIElements;
 namespace Car
 {
     public class Core : MonoBehaviour
@@ -64,6 +65,8 @@ namespace Car
             _currentRotation = gameObject.transform.rotation;
 
             _speed = _rb.linearVelocity.magnitude;
+
+
         }
 
         private void ApplyCarConfig()
@@ -77,6 +80,16 @@ namespace Car
                 _acceleration = _carConfig.Acceleration;
                 _steering = _carConfig.Steering;
                 _stamina = _carConfig.Stamina;
+            }
+        }
+
+        private void GravityForce()
+        {
+            Ray ray = new Ray(new Vector3(0, 0, 0), -gameObject.transform.up);
+
+            if(Physics.Raycast(ray, out RaycastHit hit, 100, _groundLayer))
+            {
+                
             }
         }
     }
