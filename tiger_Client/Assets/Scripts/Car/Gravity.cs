@@ -5,37 +5,34 @@ namespace Car
 {
     public class Gravity : MonoBehaviour
     {
-
         private Core _core;
+        private float _gravityForce = 9.81f;
 
-        private Vector3 _position;
-
-        private float _gravityForce = -9.81f;
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             _core = GetComponent<Core>();
-            _position = Vector3.zero;
         }
 
-        // Update is called once per frame
         void Update()
         {
-            
-            Ray ray = new Ray(_position, -gameObject.transform.up);
+            // レイの開始位置を車の少し上に調整
+            Vector3 rayStart = transform.position + Vector3.up * 0.5f;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 10, _core.GroundLayer))
+            Ray ray = new Ray(rayStart, -transform.up);
+            Debug.DrawRay(rayStart, -transform.up * 100, Color.red);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 100, _core.GroundLayer))
             {
                 Vector3 groundNormal = hit.normal;
-                Vector3 gravityDirection = -groundNormal;
-                _core.Rb.AddForce(gravityDirection * _gravityForce, ForceMode.Acceleration);
+                //Vector3 gravityDirection = Vector3.Lerp(-groundNormal, Vector3.down, 1f).normalized;
+                _core.Rb.AddForce(groundNormal * _gravityForce, ForceMode.Acceleration);
+                //Debug.Log("Hit Ground");
             }
             else
             {
-                //_core.Rb.AddForce(Vector3.down * _gravityForce * 10, ForceMode.Acceleration);
+                _core.Rb.AddForce(Vector3.down * _gravityForce, ForceMode.Acceleration);
+                Debug.Log("Missed Ground");
             }
         }
-
-        
     }
 }

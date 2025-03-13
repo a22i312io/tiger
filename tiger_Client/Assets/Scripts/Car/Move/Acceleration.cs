@@ -11,9 +11,16 @@ namespace Car.Move
 
         Vector3 _frontDirection;
 
+        private float Speed;
+
+        public float AccelPerSecond;
+
+        public float TurnPerSecond;
+
         public bool IsAccelerator {  get { return _isAccelerator; } set { _isAccelerator = value; } }
         void Start()
         {
+            Speed = 0;
             _core = GetComponent<Core>();
             
         }
@@ -22,15 +29,28 @@ namespace Car.Move
         void FixedUpdate()
         {
             if (_core == null) return;
-            
+
             if (_isAccelerator)
             {
-                
-                _frontDirection = _core.CurrentRotation * Vector3.forward;
-                
-                ApplyAccelerator(_frontDirection);
+
+                //_frontDirection = _core.CurrentRotation * Vector3.forward;
+
+                Speed += AccelPerSecond * Time.deltaTime;
+                if (Speed > 200) Speed = 200;
+                //Debug.Log("gg");
+
+                //_frontDirection = _core.CurrentRotation * Vector3.forward;
+                //ApplyAccelerator(_frontDirection);
+
             }
-            
+            else
+            {
+                Speed -= AccelPerSecond * Time.deltaTime / 2;
+                if (Speed < 0) Speed = 0;
+            }
+
+
+            _core.Rb.linearVelocity = transform.forward * Speed;
         }
 
         private void ApplyAccelerator(Vector3 position)
@@ -43,8 +63,10 @@ namespace Car.Move
             {
                 _core.Rb.linearDamping = 0.1f; // ’ÊíŽž‚Ì drag ‚É–ß‚·
             }
-            
+
             _core.Rb.AddForce(position * _core.Acceleration);
+
+            //_core.Rb.linearVelocity = position * Time.deltaTime * 1000.0f;
         }
     }
 }

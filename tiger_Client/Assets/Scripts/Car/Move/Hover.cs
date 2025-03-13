@@ -10,7 +10,7 @@ namespace Car.Move {
         // タイヤのオフセット
         private List<Vector3> _offsets = new List<Vector3>();
 
-        private float _springStrength = 5f;
+        [SerializeField]private float _springStrength = 5f;
 
         private bool _isHover = true;
 
@@ -29,10 +29,10 @@ namespace Car.Move {
         {
             _core = GetComponent<Core>();
 
-            _offsets.Add(new Vector3(1f, -0.4f, 1.85f));  // 右前輪
-            _offsets.Add(new Vector3(-1f, -0.4f, 1.85f)); // 左前輪
-            _offsets.Add(new Vector3(1f, -0.4f, -1.85f)); // 右後輪
-            _offsets.Add(new Vector3(-1f, -0.4f, -1.85f)); // 左後輪
+            _offsets.Add(new Vector3(1.6f, -0.4f, 2.7f));  // 右前輪
+            _offsets.Add(new Vector3(-1.6f, -0.4f, 2.7f)); // 左前輪
+            _offsets.Add(new Vector3(1.6f, -0.4f, -2.7f)); // 右後輪
+            _offsets.Add(new Vector3(-1.6f, -0.4f, -2.7f)); // 左後輪
         }
 
         // Update is called once per frame
@@ -97,6 +97,12 @@ namespace Car.Move {
 
                 float force = springForce - dampingForce;
                 _core.Rb.AddForceAtPosition(groundNormal * force, position);
+
+                
+            }
+            else
+            {
+                
             }
         }
     }

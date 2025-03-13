@@ -13,10 +13,13 @@ public class Input : MonoBehaviour
     private bool _isAccerelation = false;
     // ステアリングのX値
     private float _steering;
+    // ブレーキ判定
+    private bool _isBrake = false;
 
     public Vector3 SteeringValue { get { return _steeringValue; } }
     public bool IsAccerelation { get { return _isAccerelation; } }
     public float Steering { get { return _steering; } }
+    public bool IsBrake { get { return _isBrake; } }
 
     void Start()
     {
@@ -28,6 +31,9 @@ public class Input : MonoBehaviour
         _input.Player.Steering.started += OnSteering;
         _input.Player.Steering.performed += OnSteering;
         _input.Player.Steering.canceled += OnSteering;
+
+        _input.Player.Brake.performed += OnBrake;
+        _input.Player.Brake.canceled += OnBrake;
 
         _input.Enable();
     }
@@ -44,7 +50,10 @@ public class Input : MonoBehaviour
       
     }
 
-
+    private void OnBrake(InputAction.CallbackContext context)
+    {
+        _isBrake = context.ReadValue<float>() > 0;
+    }
     private void OnDestroy()
     {
         _input?.Dispose();
