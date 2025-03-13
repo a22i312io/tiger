@@ -31,9 +31,9 @@ namespace Car.Player
         public PacketData.eInputMask InputMask { get { return _inputMask; } }
         public bool IsAccelerator { get { return (_inputMask & PacketData.eInputMask.Accelerator) != 0; } }
 
-        public PlayerBase(GameObject prefab, Transform parent)
+        public PlayerBase(GameObject prefab, Transform parent, Vector3 position)
         {
-            _obj = GameObject.Instantiate(prefab);
+            _obj = GameObject.Instantiate(prefab, position, /*Quaternion.Euler(0, 180, 0)*/ Quaternion.identity);
 
             _obj.transform.parent = parent.transform;
 
@@ -60,7 +60,7 @@ namespace Car.Player
     public class Player : PlayerBase
     {
         
-        public Player(GameObject prefab, Transform parent) : base(prefab, parent)
+        public Player(GameObject prefab, Transform parent, Vector3 position) : base(prefab, parent, position)
         {
         }
 
@@ -73,7 +73,7 @@ namespace Car.Player
 
     public class NetPlayer : PlayerBase
     {
-        public NetPlayer(GameObject prefab, Transform parent) : base(prefab, parent)
+        public NetPlayer(GameObject prefab, Transform parent, Vector3 position) : base(prefab, parent, position)
         {
             _playerController.Sleep();
         }

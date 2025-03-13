@@ -53,6 +53,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drift"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d03fd38-aa96-4549-9a4b-3b4fde56bfe2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -165,6 +174,28 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Brake"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9dad026-3d53-4638-adf8-0ca310253e63"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e29986f5-d2bf-483f-86c9-f586ee38bd40"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -176,6 +207,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_Steering = m_Player.FindAction("Steering", throwIfNotFound: true);
         m_Player_Accelerator = m_Player.FindAction("Accelerator", throwIfNotFound: true);
         m_Player_Brake = m_Player.FindAction("Brake", throwIfNotFound: true);
+        m_Player_Drift = m_Player.FindAction("Drift", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -245,6 +277,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Steering;
     private readonly InputAction m_Player_Accelerator;
     private readonly InputAction m_Player_Brake;
+    private readonly InputAction m_Player_Drift;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -252,6 +285,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @Steering => m_Wrapper.m_Player_Steering;
         public InputAction @Accelerator => m_Wrapper.m_Player_Accelerator;
         public InputAction @Brake => m_Wrapper.m_Player_Brake;
+        public InputAction @Drift => m_Wrapper.m_Player_Drift;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -270,6 +304,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Brake.started += instance.OnBrake;
             @Brake.performed += instance.OnBrake;
             @Brake.canceled += instance.OnBrake;
+            @Drift.started += instance.OnDrift;
+            @Drift.performed += instance.OnDrift;
+            @Drift.canceled += instance.OnDrift;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -283,6 +320,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Brake.started -= instance.OnBrake;
             @Brake.performed -= instance.OnBrake;
             @Brake.canceled -= instance.OnBrake;
+            @Drift.started -= instance.OnDrift;
+            @Drift.performed -= instance.OnDrift;
+            @Drift.canceled -= instance.OnDrift;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -305,5 +345,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnSteering(InputAction.CallbackContext context);
         void OnAccelerator(InputAction.CallbackContext context);
         void OnBrake(InputAction.CallbackContext context);
+        void OnDrift(InputAction.CallbackContext context);
     }
 }

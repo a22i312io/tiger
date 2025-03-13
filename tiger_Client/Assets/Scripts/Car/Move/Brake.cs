@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,25 +14,25 @@ namespace Car.Move
         private float _speed;
         // ƒuƒŒ[ƒL—Í
         private float _brakepower = 150;
-        public Vector3 Brakeforce(Core core)
+
+        
+       
+        public void OnBrake(Accelerator accele)
         {
-            _localVelocity = core.transform.InverseTransformDirection(core.Rb.linearVelocity);
-            _speed = _localVelocity.magnitude;
+            
+            _speed = accele.Speed;
             Debug.Log(_localVelocity);
             if(_speed > 0)
             {
-                
-                _force = -_localVelocity.normalized * _brakepower;
-                //core.Rb.linearDamping = 1000;
-                //Debug.Log("aa");
+
+                accele.Speed = _speed - 2;
+
             }
             else
             {
-                _force = Vector3.zero;
+                accele.Speed = 0;
             }
             
-
-            return _force;
         }
     }
 }

@@ -9,6 +9,10 @@ namespace Car.Move
         private Accelerator _accelerator;
         private Steering _steering;
         private Brake _brake;
+        private float _speed;
+        private Drift _drift;
+
+        public float Speed { get { return _speed; }set { _speed = _accelerator.Speed; } }
 
         private Vector3 _force;
         void Start()
@@ -19,6 +23,7 @@ namespace Car.Move
             _accelerator = GetComponent<Accelerator>();
             _steering = GetComponent<Steering>();
             _brake = new Brake();
+            _drift = new Drift();
         }
 
         // Update is called once per frame
@@ -32,8 +37,16 @@ namespace Car.Move
 
                 if (_input.IsBrake)
                 {
-                    _force = _brake.Brakeforce(_core);
-                    _core.Rb.AddForce(_force);
+                    _brake.OnBrake(_accelerator);
+                }
+                
+                if (_input.IsDrift)
+                {
+                    _drift.OnDrift(_steering);
+                }
+                else
+                {
+                    _drift.OffDrift(_steering);
                 }
 
             }
