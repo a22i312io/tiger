@@ -50,7 +50,7 @@ namespace Car.Player
             //_inputSteering = input.Steering;
 
             _inputMask = 0;
-            if (input.IsAccerelation) { _inputMask |= PacketData.eInputMask.Accelerator; }
+            if (input.IsAcceleration) { _inputMask |= PacketData.eInputMask.Accelerator; }
 
         }
 

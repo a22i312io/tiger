@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Car.Move
 {
-    public class Drift : MonoBehaviour
+    public class Drift
     {
         
 

@@ -62,6 +62,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""720daf15-7c57-4ab3-99fa-c93cf067b7c7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -196,6 +205,28 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Drift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8defbc33-76ab-4adf-977d-689acd12aae1"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""28ec2c61-0fb5-4ebf-9913-d767190ee92b"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -208,6 +239,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_Accelerator = m_Player.FindAction("Accelerator", throwIfNotFound: true);
         m_Player_Brake = m_Player.FindAction("Brake", throwIfNotFound: true);
         m_Player_Drift = m_Player.FindAction("Drift", throwIfNotFound: true);
+        m_Player_Reset = m_Player.FindAction("Reset", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -278,6 +310,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Accelerator;
     private readonly InputAction m_Player_Brake;
     private readonly InputAction m_Player_Drift;
+    private readonly InputAction m_Player_Reset;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -286,6 +319,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @Accelerator => m_Wrapper.m_Player_Accelerator;
         public InputAction @Brake => m_Wrapper.m_Player_Brake;
         public InputAction @Drift => m_Wrapper.m_Player_Drift;
+        public InputAction @Reset => m_Wrapper.m_Player_Reset;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -307,6 +341,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Drift.started += instance.OnDrift;
             @Drift.performed += instance.OnDrift;
             @Drift.canceled += instance.OnDrift;
+            @Reset.started += instance.OnReset;
+            @Reset.performed += instance.OnReset;
+            @Reset.canceled += instance.OnReset;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -323,6 +360,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Drift.started -= instance.OnDrift;
             @Drift.performed -= instance.OnDrift;
             @Drift.canceled -= instance.OnDrift;
+            @Reset.started -= instance.OnReset;
+            @Reset.performed -= instance.OnReset;
+            @Reset.canceled -= instance.OnReset;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -346,5 +386,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnAccelerator(InputAction.CallbackContext context);
         void OnBrake(InputAction.CallbackContext context);
         void OnDrift(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
 }

@@ -10,7 +10,7 @@ public class Input : MonoBehaviour
     // ステアリング入力値
     private Vector2 _steeringValue;
     // 加速判定
-    private bool _isAccerelation = false;
+    private bool _isAcceleration = false;
     // ステアリングのX値
     private float _steering;
     // ブレーキ判定
@@ -18,11 +18,14 @@ public class Input : MonoBehaviour
     // ドリフト判定
     private bool _isDrift = false;
 
+    private bool _isReset = false;
+
     public Vector3 SteeringValue { get { return _steeringValue; } }
-    public bool IsAccerelation { get { return _isAccerelation; } }
+    public bool IsAcceleration { get { return _isAcceleration; } }
     public float Steering { get { return _steering; } }
     public bool IsBrake { get { return _isBrake; } }
     public bool IsDrift {  get { return _isDrift; } }
+    public bool IsReset { get { return _isReset; } }
 
     void Start()
     {
@@ -41,12 +44,15 @@ public class Input : MonoBehaviour
         _input.Player.Drift.performed += OnDrift;
         _input.Player.Drift.canceled += OnDrift;
 
+        _input.Player.Reset.performed += OnReset;
+        _input.Player.Reset.canceled += OnReset;
+
         _input.Enable();
     }
 
     private void OnAcceleration(InputAction.CallbackContext context)
     {
-        _isAccerelation = context.ReadValue<float>() > 0;
+        _isAcceleration = context.ReadValue<float>() > 0;
        
     }
 
@@ -64,6 +70,11 @@ public class Input : MonoBehaviour
     private void OnDrift(InputAction.CallbackContext context)
     {
         _isDrift = context.ReadValue<float>() > 0;
+    }
+
+    private void OnReset(InputAction.CallbackContext context)
+    {
+        _isReset = context.ReadValue<float>() >0;   
     }
     private void OnDestroy()
     {

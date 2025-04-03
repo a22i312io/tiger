@@ -1,20 +1,25 @@
-//using PlayerSystem.;
-//using System.Collections;
-//using System.Collections.Generic;
-//using TMPro.EditorUtilities;
-//using UnityEngine;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-//public class GameManager : MonoBehaviour
-//{
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-//        Player1 _obj = new Player1(gameObject, gameObject.transform);
-//    }
 
-//    // Update is called once per frame
-//    void Update()
-//    {
-        
-//    }
-//}
+public class GameManager : MonoBehaviour
+{
+    private Input _input;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        _input = FindAnyObjectByType<Input>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(_input != null)
+        {
+            if (_input.IsReset)
+            {
+                SceneManager.LoadScene("GameScene");
+            }
+        }
+    }
+}

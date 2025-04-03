@@ -22,7 +22,7 @@ namespace Car
         {
             //_target = _targetchildren.parent;
 
-            Debug.Log(_target.gameObject);
+            
 
             _cameraPosition = _target.position + _target.TransformDirection(_offset);
 

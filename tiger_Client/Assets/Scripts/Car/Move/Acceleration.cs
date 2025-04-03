@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.Windows;
 
 namespace Car.Move
@@ -30,7 +31,7 @@ namespace Car.Move
         void FixedUpdate()
         {
             if (_core == null) return;
-            Debug.Log(_speed);
+            
             if (_isAccelerator)
             {
 
@@ -50,8 +51,12 @@ namespace Car.Move
                 if (_speed < 0) _speed = 0;
             }
 
-
             _core.Rb.linearVelocity = transform.forward * _speed;
+
+            //Vector3 currentVelocity = _core.Rb.linearVelocity;
+            //Vector3 forwardVelocity = transform.forward * _speed;
+
+            //_core.Rb.linearVelocity = new Vector3(forwardVelocity.x, currentVelocity.y, forwardVelocity.z);
         }
 
         private void ApplyAccelerator(Vector3 position)
