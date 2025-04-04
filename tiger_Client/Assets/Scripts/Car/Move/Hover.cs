@@ -96,13 +96,7 @@ namespace Car.Move {
                 float dampingForce = _core.DampingForce * verticalVelocity;
 
                 float force = springForce - dampingForce;
-                _core.Rb.AddForceAtPosition(groundNormal * force, position);
-
-                
-            }
-            else
-            {
-                
+                _core.Rb.AddForceAtPosition(groundNormal * force, position);    
             }
         }
     }
