@@ -82,21 +82,20 @@ namespace Car.Move {
         {
 
             Ray ray = new Ray(position, -gameObject.transform.up);
-            Debug.DrawRay(position, -gameObject.transform.up, Color.red, 2.0f);
+            //Debug.DrawRay(position, -gameObject.transform.up, Color.red, 2.0f);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 100, _core.GroundLayer))
             {
-                // ínñ Ç∆ÇÃãóó£
-                float distance = _core.MaxDistance - hit.distance;
+                float distance = Mathf.Clamp(_core.MaxDistance - hit.distance, 0f, _core.MaxDistance);
 
-                Vector3 groundNormal = hit.normal;
+                Vector3 groundNormal = hit.normal; // éŒñ Ç™Ç»Ç¢èÍçáÇÕ Vector3.up Ç…ÇµÇƒà¿íËâªâ¬î\
                 float verticalVelocity = Vector3.Dot(_core.Rb.GetPointVelocity(position), groundNormal);
 
                 float springForce = _springStrength * distance;
                 float dampingForce = _core.DampingForce * verticalVelocity;
 
                 float force = springForce - dampingForce;
-                _core.Rb.AddForceAtPosition(groundNormal * force, position);    
+                _core.Rb.AddForceAtPosition(groundNormal * force, position);
             }
         }
     }

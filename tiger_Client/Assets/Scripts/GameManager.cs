@@ -5,7 +5,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private Input _input;
+    private bool _isGameStart;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        _isGameStart = false;
+    }
     void Start()
     {
         _input = FindAnyObjectByType<Input>();
@@ -22,4 +27,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    private void StartManager()
+    {
+        if (_isGameStart) return;
+
+    }
+
+
 }

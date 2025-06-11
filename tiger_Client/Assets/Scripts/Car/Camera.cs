@@ -4,10 +4,7 @@ namespace Car
 {
     public class Camera : MonoBehaviour
     {
-        //Transform _target;
-        
         [SerializeField] private Transform _target;
-
         [SerializeField] private Vector3 _offset;
         [SerializeField] private float _smoothSpeed;
         [SerializeField] private float _rotationSmoothSpeed = 5f;
@@ -22,8 +19,7 @@ namespace Car
         {
             //_target = _targetchildren.parent;
 
-            
-
+     
             _cameraPosition = _target.position + _target.TransformDirection(_offset);
 
 

@@ -10,7 +10,7 @@ namespace Car.Move
 
         private bool _isAccelerator = false;
 
-        Vector3 _frontDirection;
+        private Vector3 _frontDirection;
 
         private float _speed;
 
