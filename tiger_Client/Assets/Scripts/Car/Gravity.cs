@@ -13,9 +13,9 @@ namespace Car
             _core = GetComponent<Core>();
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            // レイの開始位置を車の少し上に調整
+            
             Vector3 rayStart = transform.position + Vector3.up * 0.5f;
 
             Ray ray = new Ray(rayStart, -transform.up);

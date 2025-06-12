@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
-public class Move : MonoBehaviour
+public class M : MonoBehaviour
 {
     //地面との最大距離
     [SerializeField] private float _maxDistance;
@@ -49,7 +49,7 @@ public class Move : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        
+
         _lastPosition = transform.position;
 
         _gravityForce = Physics.gravity.magnitude * _rb.mass;
@@ -67,20 +67,20 @@ public class Move : MonoBehaviour
         _gameInputs.Player.Accelerator.canceled += OnAcceleration;
         _gameInputs.Enable();
     }
-    
+
 
     // Update is called once per frame
     void Update()
     {
 
-        //Gravity();
+
     }
 
     private void FixedUpdate()
     {
         if (_rb != null)
         {
-            
+
             Vector3 offsetUpperRight = new Vector3(1f, -0.4f, 1.85f);
             Vector3 offsetUpperLeft = new Vector3(-1f, -0.4f, 1.85f);
             Vector3 offsetLowerRight = new Vector3(1f, -0.4f, -1.85f);
@@ -133,7 +133,7 @@ public class Move : MonoBehaviour
         Debug.DrawRay(position, -gameObject.transform.up, Color.red, 2.0f);
         if (Physics.Raycast(ray, out RaycastHit hit, 100, _groundLayer))
         {
-            
+
             //Vector3 maxposition = new Vector3(position.x, position.y - _maxDistance, position.z);
             //Vector3 displacement = maxposition - hit.point;
             //Vector3 springForce = -springStrength * displacement;
@@ -181,7 +181,7 @@ public class Move : MonoBehaviour
         //    _rb.AddForce(position * 100);
         //}
 
-        
+
 
         //// 目標方向（前方向）に沿った速さを計算
         //float speedInTargetDirection = Vector3.Dot(velocity, targetDirection.normalized);
@@ -214,7 +214,7 @@ public class Move : MonoBehaviour
 
         //if (_rb)
         //{
-            
+
         //    transform.Rotate(Vector3.up * _steering * _turnSpeed );
         //}
 
@@ -259,20 +259,5 @@ public class Move : MonoBehaviour
 
     }
 
-    //private void Gravity()
-    //{
-    //    Ray ray = new Ray(transform.position, -gameObject.transform.up);
 
-    //    if (Physics.Raycast(ray, out RaycastHit hit, 10, _groundLayer))
-    //    {
-    //        Vector3 groundNormal = hit.normal;
-    //        Vector3 gravityDirection = -groundNormal;
-    //        _rb.AddForce(gravityDirection * _gravityForce, ForceMode.Acceleration);
-    //    }
-    //    else
-    //    {
-
-    //    }
-    //}
-    
 }

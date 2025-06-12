@@ -16,6 +16,8 @@ namespace Car.Move {
 
         private Core _core;
 
+        Vector3 _normal;
+
         //Vector3 _currentPosition;
         // 現在姿勢
         //Quaternion _currentRotation;
@@ -29,10 +31,10 @@ namespace Car.Move {
         {
             _core = GetComponent<Core>();
 
-            _offsets.Add(new Vector3(1.6f, -0.4f, 2.7f));  // 右前輪
-            _offsets.Add(new Vector3(-1.6f, -0.4f, 2.7f)); // 左前輪
-            _offsets.Add(new Vector3(1.6f, -0.4f, -2.7f)); // 右後輪
-            _offsets.Add(new Vector3(-1.6f, -0.4f, -2.7f)); // 左後輪
+            _offsets.Add(new Vector3(1f, -0.4f, 1.85f));  // 右前輪
+            _offsets.Add(new Vector3(-1f, -0.4f, 1.85f)); // 左前輪
+            _offsets.Add(new Vector3(1f, -0.4f, -1.85f)); // 右後輪
+            _offsets.Add(new Vector3(-1f, -0.4f, -1.85f)); // 左後輪
         }
 
         // Update is called once per frame
@@ -42,7 +44,7 @@ namespace Car.Move {
             {
                 if (_isHover)
                 {
-                    _wheelPositions.Clear(); // 位置をリセット
+                    _wheelPositions.Clear(); 
 
                     //_currentPosition = gameObject.transform.position;
                     //_currentRotation = gameObject.transform.rotation;
@@ -82,20 +84,31 @@ namespace Car.Move {
         {
 
             Ray ray = new Ray(position, -gameObject.transform.up);
-            //Debug.DrawRay(position, -gameObject.transform.up, Color.red, 2.0f);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100, _core.GroundLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit1, 100, _core.GroundLayer))
             {
-                float distance = Mathf.Clamp(_core.MaxDistance - hit.distance, 0f, _core.MaxDistance);
+                _normal = hit1.normal;
+            }
+            else
+            {
+                Debug.Log("aaa");
+            }
 
-                Vector3 groundNormal = hit.normal; // 斜面がない場合は Vector3.up にして安定化可能
-                float verticalVelocity = Vector3.Dot(_core.Rb.GetPointVelocity(position), groundNormal);
+                Ray ray2 = new Ray(position, -_normal);
+            Debug.DrawRay(position, -_normal, Color.red, 2.0f);
+
+            if (Physics.Raycast(ray2, out RaycastHit hit2, 100, _core.GroundLayer))
+            {
+                float distance = _core.MaxDistance - hit2.distance;
+
+                 
+                float verticalVelocity = Vector3.Dot(_core.Rb.GetPointVelocity(position), _normal);
 
                 float springForce = _springStrength * distance;
                 float dampingForce = _core.DampingForce * verticalVelocity;
 
                 float force = springForce - dampingForce;
-                _core.Rb.AddForceAtPosition(groundNormal * force, position);
+                _core.Rb.AddForceAtPosition(_normal * force, position);
             }
         }
     }

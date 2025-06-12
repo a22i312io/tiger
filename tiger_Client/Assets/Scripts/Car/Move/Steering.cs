@@ -35,10 +35,10 @@ namespace Car.Move
         {
             float targetTurn = _steeringvalue.x * _turnSpeed;
 
-            // 徐々にターン速度を目標値に近づける
+            
             _currentTurn = Mathf.Lerp(_currentTurn, targetTurn, Time.deltaTime * _smoothFactor);
 
-            // Y軸回転
+            
             transform.Rotate(Vector3.up * _currentTurn * Time.deltaTime);
         }
     }

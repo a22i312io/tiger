@@ -14,12 +14,13 @@ namespace Network
     public class Manager : MonoBehaviour
     {
         [SerializeField] private string _ipAddress;
+
         [SerializeField] private string _macAddress;
-        // 優先するインターフェースを文字列で指定（なければ空白）
+
         [SerializeField] private string _priorityIntafaceName;
-        // ドロップダウン
+
         [SerializeField] private TMP_Dropdown _selectNetworkInterfaceDropdown;
-        // 利用可能な機器のリスト
+
         private List<NetworkInterfaceData> _networkInterfaces;
 
         public GameObject _playerPrefab;
@@ -86,7 +87,7 @@ namespace Network
 
             _playerInput = GetComponent<Input>();
             _offlinePlayer = new Player(_playerPrefab, this.transform, _spawnPos);
-            //_cinemachineVirtualCamera1 = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
+      
             _cameraTarget = GameObject.Find("CameraTarget");
 
 
@@ -114,10 +115,8 @@ namespace Network
 
             lock (_udpReceiver.LockObject)
             {
-                // 受信バッファにデータがある
                 if (_udpReceiver.Buffer != null)
                 {
-                    // プレイヤー数
                     int playerNum = _udpReceiver.Buffer[0];
 
                     int offset = 1;
