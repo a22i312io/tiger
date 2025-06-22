@@ -1,20 +1,34 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using TMPro;
 
 
 public class GameManager : MonoBehaviour
 {
+
     private Input _input;
-    private bool _isGameStart;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool _isStart;
+    private enum GameState { waiting, countdown, playing, finished }
+    private GameState _state;
+    private int _laps = 0;
+    [SerializeField] private int _targetlaps;
+    private float _time;
+    private bool _isCount = false;
+    private bool _isTime = false;
+    private bool _isFinished = false;
+    [SerializeField] private TextMeshProUGUI _counttext;
+    [SerializeField] private TextMeshProUGUI _timetext;
+
+    public int Laps { get { return _laps; } set{ _laps = value; } }
     void Awake()
     {
-        _isGameStart = false;
-    }
-    void Start()
-    {
+        InitGame();
         _input = FindAnyObjectByType<Input>();
+        //StartCoroutine(StartCount());
+        _state = GameState.countdown;
     }
+   
 
     // Update is called once per frame
     void Update()
@@ -26,13 +40,113 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene("GameScene");
             }
         }
+
+        switch (_state)
+        {
+            case GameState.waiting:
+
+                break;
+
+            case GameState.countdown:
+                if (!_isCount)
+                {
+                    StartCoroutine(StartCount());
+                    _isCount = true;
+                }
+                
+                break;
+
+            case GameState.playing:
+                if (!_isTime)
+                {
+                    StartCoroutine(Timer());
+                    _isTime = true;
+                }
+
+                if(_laps == _targetlaps)
+                {
+                    _state = GameState.finished;
+                }
+                
+                break;
+
+            case GameState.finished:
+                if (!_isFinished)
+                {
+                    FinishedProcess();
+                }
+                break;
+
+
+        }
+    }
+
+    private void InitGame()
+    {
+        _state = GameState.waiting;
+        _time = 0;
+
     }
 
     private void StartManager()
     {
-        if (_isGameStart) return;
+        if (_state != GameState.countdown) return;
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        _state = GameState.waiting;
+    }
+
+    private IEnumerator StartCount()
+    {
+        int counttimer = 3;
+        while(counttimer > 0)
+        {
+            _counttext.text =  counttimer.ToString();
+
+            yield return new WaitForSeconds(1f);
+            counttimer--;
+        }
+
+        _counttext.text = "GO";
+
+        _state = GameState.playing;
+
+        yield return new WaitForSeconds(1f);
+
+        _counttext.text = "";
+    }
+
+    private IEnumerator Timer()
+    {
+        while(_state == GameState.playing)
+        {
+            _time += Time.deltaTime;
+
+            // 小数点第2位まで表示（例：12.34）
+            _timetext.text = _time.ToString("F2");
+
+            yield return null; // 毎フレーム更新
+        }
+        
+    }
+
+    private void FinishedProcess()
+    {
 
     }
+   
 
 
 }

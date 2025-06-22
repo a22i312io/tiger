@@ -23,7 +23,9 @@ namespace Network
 
         private List<NetworkInterfaceData> _networkInterfaces;
 
-        public GameObject _playerPrefab;
+        [SerializeField] private GameObject _playerPrefab;
+
+        [SerializeField] private GameObject _startPoint;
 
         private List<PlayerBase> _players = new List<PlayerBase>();
 
@@ -86,7 +88,7 @@ namespace Network
             }
 
             _playerInput = GetComponent<Input>();
-            _offlinePlayer = new Player(_playerPrefab, this.transform, _spawnPos);
+            _offlinePlayer = new Player(_playerPrefab, this.transform, _startPoint.transform.position);
       
             _cameraTarget = GameObject.Find("CameraTarget");
 
@@ -124,7 +126,7 @@ namespace Network
                     // プレイヤーが足りない場合は補充する
                     for (int i = _players.Count; i < playerNum; i++)
                         _players.Add(new NetPlayer(_playerPrefab, this.transform, _spawnPos));
-                        _players.Add(new NetPlayer(_playerPrefab, this.transform, _spawnPos));
+                        //_players.Add(new NetPlayer(_playerPrefab, _startPoint.transform, _spawnPos));
                     //Debug.Log($"Received playerNum: {playerNum}, _players.Count: {_players.Count}");
                     // プレイヤー情報を読み込む
                     for (int i = 0; i < playerNum; i++)
