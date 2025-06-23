@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 
 public class GameManager : MonoBehaviour
@@ -13,14 +15,18 @@ public class GameManager : MonoBehaviour
     private GameState _state;
     private int _laps = 0;
     [SerializeField] private int _targetlaps;
+    private List<GameObject> _checkpoints = new List<GameObject>();
     private float _time;
     private bool _isCount = false;
     private bool _isTime = false;
     private bool _isFinished = false;
+    private bool _cangoal = false;
     [SerializeField] private TextMeshProUGUI _counttext;
     [SerializeField] private TextMeshProUGUI _timetext;
+    
 
     public int Laps { get { return _laps; } set{ _laps = value; } }
+    public bool Cangoal { get { return _cangoal; } set { _cangoal = value; } }
     void Awake()
     {
         InitGame();
@@ -134,17 +140,18 @@ public class GameManager : MonoBehaviour
         {
             _time += Time.deltaTime;
 
-            // 小数点第2位まで表示（例：12.34）
             _timetext.text = _time.ToString("F2");
 
-            yield return null; // 毎フレーム更新
+            yield return null; 
         }
-        
+
+       
+
     }
 
     private void FinishedProcess()
     {
-
+        _counttext.text = "GOAL!!";
     }
    
 

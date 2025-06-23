@@ -22,6 +22,7 @@ public class StartLine : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             gameManager.Laps += 1;
+            Debug.Log(gameManager.Laps);
         }
     }
 }

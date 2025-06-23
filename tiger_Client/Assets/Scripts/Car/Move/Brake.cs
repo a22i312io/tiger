@@ -21,7 +21,7 @@ namespace Car.Move
         {
             
             _speed = accele.Speed;
-            Debug.Log(_localVelocity);
+            //Debug.Log(_localVelocity);
             if(_speed > 0)
             {
 
