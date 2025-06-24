@@ -23,6 +23,7 @@ public class StartLine : MonoBehaviour
         {
             gameManager.Laps += 1;
             Debug.Log(gameManager.Laps);
+            this.GetComponent<Collider>().enabled = false;
         }
     }
 }

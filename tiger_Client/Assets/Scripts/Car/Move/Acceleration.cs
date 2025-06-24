@@ -31,28 +31,30 @@ namespace Car.Move
         void FixedUpdate()
         {
             if (_core == null) return;
-            
-            if (_isAccelerator)
+
+            if (_core.IsGround)
             {
+                if (_isAccelerator)
+                {
 
-                //_frontDirection = _core.CurrentRotation * Vector3.forward;
+                    //_frontDirection = _core.CurrentRotation * Vector3.forward;
 
-                _speed += _accelPerSecond * Time.deltaTime;
-                if (_speed > 150) _speed = 150;
-                //Debug.Log("gg");
+                    _speed += _accelPerSecond * Time.deltaTime;
+                    if (_speed > 150) _speed = 150;
+                    //Debug.Log("gg");
 
-                //_frontDirection = _core.CurrentRotation * Vector3.forward;
-                //ApplyAccelerator(_frontDirection);
+                    //_frontDirection = _core.CurrentRotation * Vector3.forward;
+                    //ApplyAccelerator(_frontDirection);
 
+                }
+                else
+                {
+                    _speed -= _accelPerSecond * Time.deltaTime / 2;
+                    if (_speed < 0) _speed = 0;
+                }
+
+                _core.Rb.linearVelocity = transform.forward * _speed;
             }
-            else
-            {
-                _speed -= _accelPerSecond * Time.deltaTime / 2;
-                if (_speed < 0) _speed = 0;
-            }
-
-            _core.Rb.linearVelocity = transform.forward * _speed;
-
             //Vector3 currentVelocity = _core.Rb.linearVelocity;
             //Vector3 forwardVelocity = transform.forward * _speed;
 

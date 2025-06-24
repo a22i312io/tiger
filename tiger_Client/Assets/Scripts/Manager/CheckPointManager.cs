@@ -7,8 +7,9 @@ public class CheckPointManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private List<CheckPoint> _checkpoints = new List<CheckPoint>();
-    private int _next = 1;
+    private int _next = 0;
     private int num;
+    [SerializeField] Collider _goalline;
     void Start()
     {
         num = this.transform.childCount;
@@ -31,9 +32,10 @@ public class CheckPointManager : MonoBehaviour
     {
         if (_checkpoints[_next].IsPassed)
         {
-            _checkpoints[_next].OnCollider();
-            if(_next == num-1)
+            _checkpoints[_next].IsPassed = false;
+            if (_next == num-1)
             {
+                _goalline.enabled = true;
                 _next = 0;
                 
             }
@@ -41,6 +43,7 @@ public class CheckPointManager : MonoBehaviour
             {
                 _next++;
             }
+            _checkpoints[_next].OnCollider();
         }
     }
 

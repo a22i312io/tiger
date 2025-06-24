@@ -28,7 +28,7 @@ namespace Car
 
             transform.LookAt(_target.position + _target.forward * 2f + new Vector3(0, 0, 1.7f));
             float targetZRotation = _target.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, targetZRotation);
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, _target.eulerAngles.y, targetZRotation);
         }
     }
 }

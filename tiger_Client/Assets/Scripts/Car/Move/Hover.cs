@@ -91,7 +91,7 @@ namespace Car.Move {
             }
             else
             {
-                Debug.Log("aaa");
+                
             }
 
                 Ray ray2 = new Ray(position, -_normal);

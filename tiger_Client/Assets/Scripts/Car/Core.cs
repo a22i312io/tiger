@@ -14,6 +14,8 @@ namespace Car
         [SerializeField] private float _maxDistance;
         // å∏êäóÕ
         [SerializeField] private float _dampingForce;
+        //ínñ îªíË
+        private bool _isground = false;
         // åªç›à íu
         Vector3 _currentPosition;
         // åªç›épê®
@@ -37,6 +39,7 @@ namespace Car
         public LayerMask GroundLayer { get { return _groundLayer; } }
         public float MaxDistance { get { return _maxDistance; } }
         public float DampingForce {  get { return _dampingForce; } }
+        public bool IsGround { get { return _isground; }set{ _isground = value; } }
         public Vector3 CurrentPosition { get { return _currentPosition; } }
         public Quaternion CurrentRotation { get { return _currentRotation; } }
         public string Name { get { return _name; } }

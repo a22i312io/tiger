@@ -6,11 +6,13 @@ namespace Car
     public class Gravity : MonoBehaviour
     {
         private Core _core;
-        private float _gravityForce = 9.81f;
+        private float _gravityForce;
+
 
         void Start()
         {
             _core = GetComponent<Core>();
+            _gravityForce = _core.Rb.mass * 9.81f;
         }
 
         void FixedUpdate()
@@ -27,10 +29,12 @@ namespace Car
                 //Vector3 gravityDirection = Vector3.Lerp(-groundNormal, Vector3.down, 1f).normalized;
                 _core.Rb.AddForce(-groundNormal * _gravityForce, ForceMode.Acceleration);
                 //Debug.Log("Hit Ground");
+                _core.IsGround = true;
             }
             else
             {
                 _core.Rb.AddForce(Vector3.down * _gravityForce, ForceMode.Acceleration);
+                _core.IsGround = false;
                 Debug.Log("Missed Ground");
             }
         }

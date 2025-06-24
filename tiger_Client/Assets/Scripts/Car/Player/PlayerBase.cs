@@ -33,7 +33,8 @@ namespace Car.Player
 
         public PlayerBase(GameObject prefab, Transform parent, Vector3 position)
         {
-            _obj = GameObject.Instantiate(prefab, position, /*Quaternion.Euler(0, 180, 0)*/ Quaternion.identity);
+            _obj = GameObject.Instantiate(prefab, position, Quaternion.Euler(0, 90, 0));
+            
 
             _obj.transform.parent = parent.transform;
 
