@@ -11,9 +11,16 @@ namespace Car.Move
 
         Vector3 _frontDirection;
 
+        private float _speed;
+
+        [SerializeField] private float _accelPerSecond;
+
+        [SerializeField] private float _turnPerSecond;
         public bool IsAccelerator {  get { return _isAccelerator; } set { _isAccelerator = value; } }
+        public float Speed { get { return _speed; } set { _speed = value; } }
         void Start()
         {
+            _speed = 0;
             _core = GetComponent<Core>();
             
         }
@@ -22,15 +29,31 @@ namespace Car.Move
         void FixedUpdate()
         {
             if (_core == null) return;
-            
-            if (_isAccelerator)
+
+            if (_core.IsGround)
             {
-                
-                _frontDirection = _core.CurrentRotation * Vector3.forward;
-                
-                ApplyAccelerator(_frontDirection);
+                if (_isAccelerator)
+                {
+
+                    //_frontDirection = _core.CurrentRotation * Vector3.forward;
+
+                    _speed += _accelPerSecond * Time.deltaTime;
+                    if (_speed > 150) _speed = 150;
+                    //Debug.Log("gg");
+
+                    //_frontDirection = _core.CurrentRotation * Vector3.forward;
+                    //ApplyAccelerator(_frontDirection);
+
+                }
+                else
+                {
+                    _speed -= _accelPerSecond * Time.deltaTime / 2;
+                    if (_speed < 0) _speed = 0;
+                }
+
+                _core.Rb.linearVelocity = transform.forward * _speed;
             }
-            
+
         }
 
         private void ApplyAccelerator(Vector3 position)

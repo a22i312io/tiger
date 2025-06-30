@@ -14,9 +14,9 @@ namespace Car.Move
 
         private float _speed;
 
-        public float _accelPerSecond;
+        [SerializeField] private float _accelPerSecond;
 
-        public float _turnPerSecond;
+        [SerializeField] private float _turnPerSecond;
 
         public bool IsAccelerator {  get { return _isAccelerator; } set { _isAccelerator = value; } }
         public float Speed { get { return _speed; } set { _speed = value; } }

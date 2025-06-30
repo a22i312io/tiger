@@ -1,8 +1,8 @@
-using PlayerSystem;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Car.Move {
+namespace Car.Move
+{
     public class Hover : MonoBehaviour
     {
         // タイヤの位置
@@ -10,19 +10,21 @@ namespace Car.Move {
         // タイヤのオフセット
         private List<Vector3> _offsets = new List<Vector3>();
 
-        private float _springStrength = 5f;
+        [SerializeField] private float _springStrength = 5f;
 
         private bool _isHover = true;
 
         private Core _core;
 
-        Vector3 _currentPosition;
+        Vector3 _normal;
+
+        //Vector3 _currentPosition;
         // 現在姿勢
-        Quaternion _currentRotation;
-        private Vector3 position_UpperRight;
-        private Vector3 position_UpperLeft;
-        private Vector3 position_LowerRight;
-        private Vector3 position_LowerLeft;
+        //Quaternion _currentRotation;
+        //private Vector3 position_UpperRight;
+        //private Vector3 position_UpperLeft;
+        //private Vector3 position_LowerRight;
+        //private Vector3 position_LowerLeft;
         public bool IsHover { get { return _isHover; } set { _isHover = value; } }
 
         void Start()
@@ -42,10 +44,10 @@ namespace Car.Move {
             {
                 if (_isHover)
                 {
-                    _wheelPositions.Clear(); // 位置をリセット
+                    _wheelPositions.Clear();
 
-                    _currentPosition = gameObject.transform.position;
-                    _currentRotation = gameObject.transform.rotation;
+                    //_currentPosition = gameObject.transform.position;
+                    //_currentRotation = gameObject.transform.rotation;
 
                     // 各ホイールの位置を計算
                     foreach (var offset in _offsets)
@@ -58,7 +60,7 @@ namespace Car.Move {
                     {
                         ApplyHover(position);
                     }
-                    
+
 
                     //Vector3 offsetUpperRight = new Vector3(1f, -0.4f, 1.85f);
                     //Vector3 offsetUpperLeft = new Vector3(-1f, -0.4f, 1.85f);
@@ -82,21 +84,31 @@ namespace Car.Move {
         {
 
             Ray ray = new Ray(position, -gameObject.transform.up);
-            Debug.DrawRay(position, -gameObject.transform.up, Color.red, 2.0f);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100, _core.GroundLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit1, 100, _core.GroundLayer))
             {
-                // 地面との距離
-                float distance = _core.MaxDistance - hit.distance;
+                _normal = hit1.normal;
+            }
+            else
+            {
 
-                Vector3 groundNormal = hit.normal;
-                float verticalVelocity = Vector3.Dot(_core.Rb.GetPointVelocity(position), groundNormal);
+            }
+
+            Ray ray2 = new Ray(position, -_normal);
+            Debug.DrawRay(position, -_normal, Color.red, 2.0f);
+
+            if (Physics.Raycast(ray2, out RaycastHit hit2, 100, _core.GroundLayer))
+            {
+                float distance = _core.MaxDistance - hit2.distance;
+
+
+                float verticalVelocity = Vector3.Dot(_core.Rb.GetPointVelocity(position), _normal);
 
                 float springForce = _springStrength * distance;
                 float dampingForce = _core.DampingForce * verticalVelocity;
 
                 float force = springForce - dampingForce;
-                _core.Rb.AddForceAtPosition(groundNormal * force, position);
+                _core.Rb.AddForceAtPosition(_normal * force, position);
             }
         }
     }
