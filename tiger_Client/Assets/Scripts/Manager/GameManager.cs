@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
             case GameState.finished:
                 if (!_isFinished)
                 {
-                    FinishedProcess();
+                    StartCoroutine(FinishedProcess());
                 }
                 break;
 
@@ -144,9 +144,12 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void FinishedProcess()
+    private IEnumerator FinishedProcess()
     {
         _counttext.text = "GOAL!!";
+
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("TitleScene");
     }
    
 

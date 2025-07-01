@@ -33,6 +33,7 @@ namespace Car.Move
 
         private void ApplySteeringForce()
         {
+            Debug.Log(_steeringvalue);
             float targetTurn = _steeringvalue.x * _turnSpeed;
 
             

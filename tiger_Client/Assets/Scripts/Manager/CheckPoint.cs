@@ -4,12 +4,14 @@ public class CheckPoint : MonoBehaviour
 {
     private int _number = -1;
     private bool _isPassed;
-    BoxCollider collider;
+    BoxCollider _collider;
+    MeshRenderer _mesh;
     public int Number { get { return _number; }  set { _number = value; } }
     public bool IsPassed { get { return _isPassed; } set { _isPassed = value; } }
     private void Awake()
     {
-        collider = GetComponent<BoxCollider>();
+        _collider = GetComponent<BoxCollider>();
+        _mesh = GetComponent<MeshRenderer>();
         _isPassed = false;
     }
 
@@ -25,12 +27,14 @@ public class CheckPoint : MonoBehaviour
         {
             _isPassed = true;
             Debug.Log("pass");
-            collider.enabled = false;
+            _collider.enabled = false;
+            _mesh.enabled = false;
         }
     }
 
     public void OnCollider()
     {
-        collider.enabled = true;
+        _collider.enabled = true;
+        _mesh.enabled = true;
     }
 }

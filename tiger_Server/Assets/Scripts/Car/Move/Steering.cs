@@ -30,6 +30,18 @@ public class Steering : MonoBehaviour
 
     private void ApplySteeringForce()
     {
+        if(_steeringvalue < 0)
+        {
+            _steeringvalue = -1;
+        }
+        else if(_steeringvalue > 0)
+        {
+            _steeringvalue = 1;
+        }
+        else
+        {
+            _steeringvalue = 0;
+        }
         float targetTurn = _steeringvalue * _turnSpeed;
 
         _currentTurn = Mathf.Lerp(_currentTurn, targetTurn, Time.deltaTime * _smoothFactor);
