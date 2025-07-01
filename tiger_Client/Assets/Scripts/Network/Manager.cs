@@ -60,6 +60,9 @@ namespace Network
         private bool _isCamera = false;
 
         [SerializeField] private Vector3 _spawnPos;
+
+        private PlayerBase _previousPlayer = null;
+
         void Start()
         {
             // 利用可能な機器のリストを取得
@@ -182,14 +185,13 @@ namespace Network
                 _udpClient.Send(buffer.ToArray(), buffer.Count, host, _portServer);
             }
 
-            if(!_isCamera)
+            if (player != _previousPlayer || !_isCamera)
             {
-                // カメラの注視点にプレイヤー位置をコピー
-                _cameraTarget.transform.position = player.Obj.transform.position;
-                _cameraTarget.transform.parent = player.Obj.transform;
-                _cameraTarget.transform.localPosition += new Vector3(0, 0f, 1.7f);
+                _cameraTarget.transform.SetParent(player.Obj.transform);
+                _cameraTarget.transform.localPosition = new Vector3(0, 0f, 1.7f);
                 _isCamera = true;
                 _gameManager.Player = player.Obj;
+                _previousPlayer = player;
             }
 
             _globalTimer++;
