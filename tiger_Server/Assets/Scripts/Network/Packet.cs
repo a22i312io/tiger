@@ -22,7 +22,8 @@ public class PacketData
     public enum eInputMask : byte
     {
         Accelerator = 1 << 0,
-        
+        Brake = 1 << 1,
+        Drift = 1 << 2,
     }
 
     private byte _timer = 0;

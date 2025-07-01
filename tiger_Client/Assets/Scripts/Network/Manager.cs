@@ -26,6 +26,7 @@ namespace Network
         [SerializeField] private GameObject _playerPrefab;
 
         [SerializeField] private GameObject _startPoint;
+        [SerializeField] private GameManager _gameManager;
 
         private List<PlayerBase> _players = new List<PlayerBase>();
 
@@ -188,6 +189,7 @@ namespace Network
                 _cameraTarget.transform.parent = player.Obj.transform;
                 _cameraTarget.transform.localPosition += new Vector3(0, 0f, 1.7f);
                 _isCamera = true;
+                _gameManager.Player = player.Obj;
             }
 
             _globalTimer++;

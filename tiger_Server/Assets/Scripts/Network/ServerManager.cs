@@ -7,11 +7,13 @@ using System.Net.Sockets;
 using System.Net;
 using UnityEngine;
 using UnityEditor.PackageManager;
+using Unity.Cinemachine;
 
 public class Server : MonoBehaviour
 {
-    public GameObject _playerPrefab;
-    public GameObject _bulletPrefab;
+    [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private GameObject _startPoint;
 
     // UDP通信のためのクラス
     private UdpClient _udpClient = null;
@@ -23,7 +25,11 @@ public class Server : MonoBehaviour
     private List<byte> _freeIds = new List<byte>(Byte.MaxValue - 1);
     // IDをKeyにしたPlayerのDictionary
     private Dictionary<byte, Player> _players = new Dictionary<byte, Player>();
-   
+
+    
+
+    
+
 
     void OnDestroy()
     {
@@ -50,6 +56,8 @@ public class Server : MonoBehaviour
         _udpClient.Client.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
         IPEndPoint localEP = new IPEndPoint(IPAddress.IPv6Any, _portServer);
         _udpClient.Client.Bind(localEP);
+
+       
 
         // 待ち受け開始（受信があったときOnReceivedが呼ばれる）
         _udpClient.BeginReceive(OnReceived, _udpClient);
@@ -166,6 +174,7 @@ public class Server : MonoBehaviour
             // このプレイヤーに割り当てられたidを返信する
             byte[] data = new byte[1] { id };
             _udpClient.Send(data, data.Length, ipEnd);
+            
         }
         else
         {

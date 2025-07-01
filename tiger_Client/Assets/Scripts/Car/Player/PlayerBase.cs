@@ -52,6 +52,8 @@ namespace Car.Player
 
             _inputMask = 0;
             if (input.IsAcceleration) { _inputMask |= PacketData.eInputMask.Accelerator; }
+            if (input.IsBrake) { _inputMask |= PacketData.eInputMask.Brake; }
+            if (input.IsDrift) { _inputMask |= PacketData.eInputMask.Drift; }
 
         }
 

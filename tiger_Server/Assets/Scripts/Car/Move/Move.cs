@@ -19,6 +19,7 @@ namespace Car.Move
         public bool IsAccelerator { set { _isAccelerator = value; } }
         public Vector3 SteeringForce { set { _steeringforce = value; } }
         public bool IsBrake { set { _isBrake = value; } }
+        public bool IsDrift { set { _isDrift = value; } }
 
         void Start()
         {
@@ -32,7 +33,8 @@ namespace Car.Move
         // Update is called once per frame
         void FixedUpdate()
         {
-            
+
+            Debug.Log(_isBrake);
                 _accelerator.IsAccelerator = _isAccelerator;
 
                 _steering.Steeringvalue = _steeringforce.x;

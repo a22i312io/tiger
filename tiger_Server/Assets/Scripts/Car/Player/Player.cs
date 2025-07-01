@@ -11,6 +11,7 @@ using UnityEngine.Windows;
 using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
 using UnityEditor.PackageManager;
 using Car.Move;
+using UnityEngine.UIElements;
 
 namespace Car.Player
 {
@@ -39,10 +40,13 @@ namespace Car.Player
         // 状態を表すマスク
         //protected PacketData.eStateMask _stateMask = 0;
         private Move.Move _move;
+        private Vector3 _startPosition = new Vector3((float)-322.600006, (float)-579.799988, (float)-172.399994);
 
         public IPEndPoint EndPoint { get { return _endPoint; } }
         public GameObject Obj { get { return _obj; } set { _obj = value; } }
         public bool IsAccelerator { get { return (_inputMask & PacketData.eInputMask.Accelerator) != 0; } }
+        public bool IsBrake { get { return (_inputMask & PacketData.eInputMask.Brake) != 0; } }
+        public bool IsDrift { get { return (_inputMask & PacketData.eInputMask.Drift) != 0; } }
 
         //public PacketData.eStateMask SendState
         //{
@@ -97,7 +101,7 @@ namespace Car.Player
 
             if (_obj == null)
             {
-                _obj = GameObject.Instantiate(prefab);
+                _obj = GameObject.Instantiate(prefab, _startPosition, Quaternion.Euler(0, 90, 0));
                 _obj.transform.parent = parent;
                 _playerController = _obj.GetComponent<PlayerController>();
                 //_stateMask |= PacketData.eStateMask.Reset;
@@ -134,7 +138,10 @@ namespace Car.Player
             _move = _obj.GetComponent<Move.Move>();
 
             _move.IsAccelerator = this.IsAccelerator;
+            _move.IsBrake = this.IsBrake;
+            _move.IsDrift = this.IsDrift;
             _move.SteeringForce = force;
+            
         }
 
         public void ResetTimeout() { _timeout = c_timeout; }

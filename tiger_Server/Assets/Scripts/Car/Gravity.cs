@@ -28,7 +28,7 @@ namespace Car
                 Vector3 groundNormal = hit.normal;
                 //Vector3 gravityDirection = Vector3.Lerp(-groundNormal, Vector3.down, 1f).normalized;
                 _core.Rb.AddForce(-groundNormal * _gravityForce, ForceMode.Acceleration);
-                //Debug.Log("Hit Ground");
+                Debug.Log("Hit Ground");
                 _core.IsGround = true;
             }
             else

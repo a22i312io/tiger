@@ -77,13 +77,14 @@ namespace Car.Player
             GetComponent<Hover>().enabled = false;
 
             GetComponent<Steering>().enabled = false;
+
+            GetComponent<Gravity>().enabled = false;
         }
 
         // WakeUp（ローカルで衝突判定やシミュレーションを行う状態）
         public void WakeUp()
         {
-          
-            GetComponent<SphereCollider>().enabled = true;
+            GetComponent<BoxCollider>().enabled = true;
             
             GetComponent<Rigidbody>().isKinematic = false;
 
@@ -98,6 +99,8 @@ namespace Car.Player
             GetComponent<Hover>().enabled = true;
 
             GetComponent<Steering>().enabled = true;
+
+            GetComponent<Gravity>().enabled = true;
         }
 
     }

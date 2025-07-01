@@ -4,6 +4,7 @@ using System.Collections;
 using TMPro;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Car.Player;
 
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     private int _laps = 0;
     [SerializeField] private int _targetlaps;
     private List<GameObject> _checkpoints = new List<GameObject>();
+    [SerializeField] private GameObject _player;
     private float _time;
     private bool _isCount = false;
     private bool _isTime = false;
@@ -27,6 +29,8 @@ public class GameManager : MonoBehaviour
 
     public int Laps { get { return _laps; } set{ _laps = value; } }
     public bool Cangoal { get { return _cangoal; } set { _cangoal = value; } }
+    public GameObject Player { get { return _player; }set { _player = value; } }
+    public bool State => _state == GameState.playing;
     void Awake()
     {
         InitGame();
@@ -57,6 +61,7 @@ public class GameManager : MonoBehaviour
                 if (!_isCount)
                 {
                     StartCoroutine(StartCount());
+
                     _isCount = true;
                 }
                 
@@ -66,6 +71,7 @@ public class GameManager : MonoBehaviour
                 if (!_isTime)
                 {
                     StartCoroutine(Timer());
+                    StartManager();
                     _isTime = true;
                 }
 
@@ -96,22 +102,11 @@ public class GameManager : MonoBehaviour
 
     private void StartManager()
     {
-        if (_state != GameState.countdown) return;
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-        _state = GameState.waiting;
+        if (_player)
+        {
+            PlayerController controller = _player.GetComponent<PlayerController>();
+            controller.WakeUp();
+        }
     }
 
     private IEnumerator StartCount()

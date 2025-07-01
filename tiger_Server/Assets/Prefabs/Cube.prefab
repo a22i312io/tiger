@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 7931466164048210197}
   - component: {fileID: 2639503782585275527}
   - component: {fileID: 6878645214375282330}
+  - component: {fileID: -312950154441773303}
+  - component: {fileID: 3943978068796912382}
   m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
@@ -122,9 +124,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7371550690223516610}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 0.5
+  m_Drag: 0.5
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -136,11 +138,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &4522160757916423494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +159,7 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  _maxDistance: 4
+  _maxDistance: 5
   _dampingForce: 1
 --- !u!114 &3562820560707350703
 MonoBehaviour:
@@ -183,6 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ce0b87b5e27c3479984286aa9e45af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _accelPerSecond: 10
+  _turnPerSecond: 1
 --- !u!114 &2639503782585275527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,6 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e06a7fb81ab5e4844ae0bf8d3a93f87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _springStrength: 5
 --- !u!114 &6878645214375282330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,3 +213,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _smoothFactor: 5
+--- !u!114 &-312950154441773303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371550690223516610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16bf82e80e18eb646b93e455cbefbdbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3943978068796912382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371550690223516610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c516c18e1d16596468d2550a451cfc6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraTarget: {fileID: 0}
